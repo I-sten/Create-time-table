@@ -1,0 +1,896 @@
+{
+    "school": {
+        "name": "School timetable data extracted from Uk.pdf",
+        "days": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "periods": [
+            {
+                "number": 1,
+                "name": "Period 1",
+                "start": "08:00",
+                "end": "09:00"
+            },
+            {
+                "number": 2,
+                "name": "Period 2",
+                "start": "09:00",
+                "end": "10:00"
+            },
+            {
+                "number": 3,
+                "name": "Period 3",
+                "start": "10:30",
+                "end": "11:30"
+            },
+            {
+                "number": 4,
+                "name": "Period 4",
+                "start": "11:30",
+                "end": "12:30"
+            }
+        ],
+        "breaks": [
+            {
+                "after_period": 2,
+                "name": "Break"
+            }
+        ]
+    },
+    "teachers": [
+        {
+            "id": "T001",
+            "name": "Ameir"
+        },
+        {
+            "id": "T002",
+            "name": "Amour"
+        },
+        {
+            "id": "T003",
+            "name": "Asha"
+        },
+        {
+            "id": "T004",
+            "name": "Chepe"
+        },
+        {
+            "id": "T005",
+            "name": "Duweki"
+        },
+        {
+            "id": "T006",
+            "name": "Fauzia"
+        },
+        {
+            "id": "T007",
+            "name": "Hamad"
+        },
+        {
+            "id": "T008",
+            "name": "Hamima"
+        },
+        {
+            "id": "T009",
+            "name": "Kh. Omar"
+        },
+        {
+            "id": "T010",
+            "name": "Khadija"
+        },
+        {
+            "id": "T011",
+            "name": "Khamis"
+        },
+        {
+            "id": "T012",
+            "name": "Kidinya"
+        },
+        {
+            "id": "T013",
+            "name": "Kyakazi"
+        },
+        {
+            "id": "T014",
+            "name": "Luti"
+        },
+        {
+            "id": "T015",
+            "name": "Makame"
+        },
+        {
+            "id": "T016",
+            "name": "Mbaraka"
+        },
+        {
+            "id": "T017",
+            "name": "Mw. Iddi"
+        },
+        {
+            "id": "T018",
+            "name": "Mw. Khamis"
+        },
+        {
+            "id": "T019",
+            "name": "Mwaka"
+        },
+        {
+            "id": "T020",
+            "name": "Mwanaid"
+        },
+        {
+            "id": "T021",
+            "name": "Mwatma"
+        },
+        {
+            "id": "T022",
+            "name": "Mwatum"
+        },
+        {
+            "id": "T023",
+            "name": "Said"
+        },
+        {
+            "id": "T024",
+            "name": "Saida"
+        },
+        {
+            "id": "T025",
+            "name": "Sikudhan"
+        },
+        {
+            "id": "T026",
+            "name": "Sultan"
+        },
+        {
+            "id": "T027",
+            "name": "Zainab"
+        }
+    ],
+    "classes": [
+        {
+            "id": "FI-A",
+            "name": "FI A",
+            "subjects": [
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T015",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T006",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Arabic",
+                    "teacher": "T002",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T023",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T025",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "History",
+                    "teacher": "T026",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FI-B",
+            "name": "FI B",
+            "subjects": [
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T027",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T006",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Chemistry",
+                    "teacher": "T013",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T013",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T025",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T004",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T002",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T023",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T017",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FI-C",
+            "name": "FI C",
+            "subjects": [
+                {
+                    "subject": "Geography",
+                    "teacher": "T006",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T007",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T025",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T023",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Computer",
+                    "teacher": "T011",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T004",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T017",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FI-D",
+            "name": "FI D",
+            "subjects": [
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T025",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T002",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T006",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "History",
+                    "teacher": "T026",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T023",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FII-A",
+            "name": "FII A",
+            "subjects": [
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T007",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T001",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T012",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T014",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T017",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T003",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Chemistry",
+                    "teacher": "T013",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T008",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T018",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FII-B",
+            "name": "FII B",
+            "subjects": [
+                {
+                    "subject": "Geography",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Computer",
+                    "teacher": "T011",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T001",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T018",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T008",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T014",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T007",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T016",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FII-C",
+            "name": "FII C",
+            "subjects": [
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T018",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T001",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T008",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "History",
+                    "teacher": "T004",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T012",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T007",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FII-D",
+            "name": "FII D",
+            "subjects": [
+                {
+                    "subject": "English",
+                    "teacher": "T008",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T012",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Arabic",
+                    "teacher": "T002",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T001",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T007",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biashara",
+                    "teacher": "T022",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Hist Tz",
+                    "teacher": "T009",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T018",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FIII-A",
+            "name": "FIII A",
+            "subjects": [
+                {
+                    "subject": "English",
+                    "teacher": "T010",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Civics",
+                    "teacher": "T026",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T003",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T027",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T016",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Chemistry",
+                    "teacher": "T020",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T021",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FIII-B",
+            "name": "FIII B",
+            "subjects": [
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T021",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "History",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T027",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T003",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Arabic",
+                    "teacher": "T002",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T010",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Civics",
+                    "teacher": "T026",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FIV-A",
+            "name": "FIV A",
+            "subjects": [
+                {
+                    "subject": "English",
+                    "teacher": "T010",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Civics",
+                    "teacher": "T026",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T003",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T011",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Physics",
+                    "teacher": "T016",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Chemistry",
+                    "teacher": "T020",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T019",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        },
+        {
+            "id": "FIV-B",
+            "name": "FIV B",
+            "subjects": [
+                {
+                    "subject": "Kiswahili",
+                    "teacher": "T019",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Geography",
+                    "teacher": "T024",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "History",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Mathematics",
+                    "teacher": "T011",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Biology",
+                    "teacher": "T003",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Arabic",
+                    "teacher": "T002",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "English",
+                    "teacher": "T010",
+                    "sessions_per_week": 3,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Dini",
+                    "teacher": "T005",
+                    "sessions_per_week": 2,
+                    "max_sessions_per_day": 1
+                },
+                {
+                    "subject": "Civics",
+                    "teacher": "T026",
+                    "sessions_per_week": 1,
+                    "max_sessions_per_day": 1
+                }
+            ]
+        }
+    ],
+    "rules": {
+        "max_teacher_consecutive_periods": 3,
+        "max_class_consecutive_periods": 20,
+        "prefer_same_subject_consecutive_periods": true,
+        "prioritize_max_sessions_per_day": true,
+        "spread_subject_across_days": true,
+        "teacher_unavailable": [],
+        "class_unavailable": [],
+        "fixed_lessons": []
+    },
+    "source_notes": [
+        "Data was transcribed from the supplied Uk.pdf.",
+        "The PDF timetable format shows Monday-Friday and 4 periods per day, grouped as 1, 2, Break, 3, 4.",
+        "The PDF does not provide clock start/end times, so those fields are null.",
+        "The 'Periods' values were treated as weekly sessions for each subject.",
+        "Form II A appears twice. For Physics, page 1 lists Mbaraka while page 2 lists Mw. Iddi. This JSON uses Mw. Iddi because it is the later repeated entry; this should be confirmed before generating the final timetable."
+    ],
+    "source_ambiguities": [
+        {
+            "class": "FII A",
+            "subject": "Physics",
+            "page_1_teacher": "Mbaraka",
+            "page_2_teacher": "Mw. Iddi",
+            "selected_teacher": "Mw. Iddi"
+        }
+    ]
+}
