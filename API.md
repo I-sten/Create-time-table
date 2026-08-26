@@ -1,21 +1,30 @@
 # Automatic Timetable Solver API
 
-## Start the server
+## Start the server with PM2
 
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m uvicorn api:app --host 0.0.0.0 --port 8000
+npm install --global pm2
+pm2 start ecosystem.config.js
 ```
 
 Open `http://localhost:8000/docs` for interactive Swagger documentation or
 `http://localhost:8000/openapi.json` for the machine-readable API contract.
 
-For a standalone container deployment:
+Useful process-management commands:
 
 ```powershell
-docker build -t timetable-solver .
-docker run --rm -p 8000:8000 timetable-solver
+pm2 status
+pm2 logs timetable-api
+pm2 restart timetable-api
+pm2 stop timetable-api
+pm2 save
 ```
+
+On Linux, create the virtual environment and install dependencies with
+`python3 -m venv .venv` and `.venv/bin/python -m pip install -r requirements.txt`.
+The same PM2 configuration works on Windows and Linux.
 
 ## Endpoints
 
