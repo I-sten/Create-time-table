@@ -3342,7 +3342,7 @@
   "solver": {
     "status": "OPTIMAL",
     "objective": 236.0,
-    "wall_time": 1.382983,
+    "wall_time": 0.9869032000000001,
     "total_lessons": 236
   }
 }

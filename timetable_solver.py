@@ -1,6 +1,7 @@
 import json
 import csv
 import os
+import argparse
 from collections import defaultdict
 from ortools.sat.python import cp_model
 
@@ -9,11 +10,29 @@ OUTPUT_JSON = "timetable_output.json"
 OUTPUT_CSV = "timetable.csv"
 
 
-def load_data():
-    if not os.path.exists(DATA_FILE):
-        raise FileNotFoundError(f"Could not find {DATA_FILE}")
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
+def load_data(path=DATA_FILE):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Could not find {path}")
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def require_unique(items, field, label):
+    values = []
+    seen = set()
+    for index, item in enumerate(items):
+        if not isinstance(item, dict) or field not in item:
+            raise ValueError(f"Every {label} must be an object with '{field}' (item {index + 1}).")
+        value = str(item[field]).strip()
+        if not value:
+            raise ValueError(f"{label.title()} {field} must be non-empty (item {index + 1}).")
+        key = value.casefold()
+        if key in seen:
+            raise ValueError(f"Duplicate {label} {field}: {value}")
+        seen.add(key)
+        item[field] = value
+        values.append(value)
+    return set(values)
 
 
 def normalize_days(days):
@@ -96,7 +115,11 @@ def normalize_breaks(breaks, periods):
 
 
 def validate_data(data):
+    if not isinstance(data, dict):
+        raise ValueError("The input root must be a JSON object.")
     school = data.get("school", {})
+    if not isinstance(school, dict):
+        raise ValueError("school must be an object.")
     days = normalize_days(school.get("days", []))
     periods = normalize_periods(school.get("periods", []))
     school["days"] = days
@@ -106,27 +129,58 @@ def validate_data(data):
     if not periods:
         raise ValueError("No periods defined.")
 
-    teacher_ids = {t["id"] for t in data.get("teachers", [])}
+    teachers = data.get("teachers", [])
     classes = data.get("classes", [])
-    class_ids = {c["id"] for c in classes}
+    if not isinstance(teachers, list) or not isinstance(classes, list):
+        raise ValueError("teachers and classes must be lists.")
+    teacher_ids = require_unique(teachers, "id", "teacher")
+    class_ids = require_unique(classes, "id", "class")
+    require_unique(classes, "name", "class")
     if not classes:
         raise ValueError("No classes defined.")
 
     breaks = normalize_breaks(school.get("breaks", []), periods)
     school["breaks"] = breaks
     period_groups = build_contiguous_period_groups(periods, breaks)
+    rules = data.get("rules", {})
+    if not isinstance(rules, dict):
+        raise ValueError("rules must be an object.")
 
-    for pref in data.get("rules", {}).get("subject_position_preferences", []):
+    for rule_name, owner_key, valid_owners in (
+        ("teacher_unavailable", "teacher", teacher_ids),
+        ("class_unavailable", "class", class_ids),
+    ):
+        entries = rules.get(rule_name, [])
+        if not isinstance(entries, list):
+            raise ValueError(f"{rule_name} must be a list.")
+        seen_slots = set()
+        for item in entries:
+            if not isinstance(item, dict) or not all(k in item for k in (owner_key, "day", "period")):
+                raise ValueError(f"Each {rule_name} entry requires {owner_key}, day, and period.")
+            if item[owner_key] not in valid_owners:
+                raise ValueError(f"Unknown {owner_key} in {rule_name}: {item[owner_key]}")
+            slot = (item[owner_key], day_index(days, item["day"]), period_index(periods, item["period"]))
+            if slot in seen_slots:
+                raise ValueError(f"Duplicate {rule_name} entry: {item}")
+            seen_slots.add(slot)
+
+    class_subjects = {
+        cls["id"]: {str(s.get("subject", "")).strip().casefold() for s in cls.get("subjects", []) if isinstance(s, dict)}
+        for cls in classes
+    }
+    for pref in rules.get("subject_position_preferences", []):
         if not isinstance(pref, dict):
             raise ValueError("Each subject_position_preferences entry must be an object.")
         if "class" not in pref or "subject" not in pref or "when" not in pref:
             raise ValueError("subject_position_preferences entries require class, subject, and when.")
         if pref["class"] not in class_ids:
             raise ValueError(f"Unknown class in subject_position_preferences: {pref['class']}")
+        if str(pref["subject"]).strip().casefold() not in class_subjects[pref["class"]]:
+            raise ValueError(f"Unknown subject in subject_position_preferences: {pref['class']} / {pref['subject']}")
         if str(pref["when"]).strip().lower() not in {"first", "last"}:
             raise ValueError(f"Invalid when value in subject_position_preferences: {pref['when']}")
 
-    for restriction in data.get("rules", {}).get("free_period_restrictions", []):
+    for restriction in rules.get("free_period_restrictions", []):
         if not isinstance(restriction, dict):
             raise ValueError("Each free_period_restrictions entry must be an object.")
         if "class" not in restriction:
@@ -150,22 +204,30 @@ def validate_data(data):
     school["breaks"] = breaks
 
     for cls in classes:
+        subjects = cls.get("subjects", [])
+        if not isinstance(subjects, list) or not subjects:
+            raise ValueError(f"Class {cls['name']} must define at least one subject.")
         total = 0
         seen_subjects = set()
-        for s in cls.get("subjects", []):
+        for s in subjects:
+            if not isinstance(s, dict) or not all(k in s for k in ("subject", "teacher", "sessions_per_week")):
+                raise ValueError(f"Every subject in {cls['name']} requires subject, teacher, and sessions_per_week.")
             subject = s["subject"]
             teacher = s["teacher"]
             sessions = int(s["sessions_per_week"])
             max_day = int(s.get("max_sessions_per_day", sessions))
             if teacher not in teacher_ids:
                 raise ValueError(f"Unknown teacher {teacher} in {cls['name']} / {subject}.")
-            if sessions < 0:
-                raise ValueError(f"Negative sessions_per_week: {cls['name']} / {subject}.")
+            if sessions < 1:
+                raise ValueError(f"sessions_per_week must be >= 1: {cls['name']} / {subject}.")
             if max_day < 1:
                 raise ValueError(f"max_sessions_per_day must be >= 1: {cls['name']} / {subject}.")
-            if subject in seen_subjects:
+            subject_key = str(subject).strip().casefold()
+            if not str(subject).strip():
+                raise ValueError(f"Empty subject name in {cls['name']}.")
+            if subject_key in seen_subjects:
                 raise ValueError(f"Duplicate subject entry in {cls['name']}: {subject}.")
-            seen_subjects.add(subject)
+            seen_subjects.add(subject_key)
             total += sessions
             if sessions > len(days) * max_day:
                 raise ValueError(
@@ -179,7 +241,7 @@ def validate_data(data):
                 f"Impossible class capacity: {cls['name']} requires {total} lessons "
                 f"but has only {capacity} class slots."
             )
-        consecutive_limit = data.get("rules", {}).get("max_class_consecutive_periods")
+        consecutive_limit = rules.get("max_class_consecutive_periods")
         if consecutive_limit is not None:
             max_possible = max_slots_with_consecutive_limit(len(periods), consecutive_limit)
             if total > len(days) * max_possible:
@@ -188,6 +250,26 @@ def validate_data(data):
                     f"but with max {consecutive_limit} consecutive periods and {len(periods)} periods/day, "
                     f"each day can host at most {max_possible} lessons."
                 )
+
+    for name in ("max_class_consecutive_periods", "max_teacher_consecutive_periods"):
+        if name in rules and (not isinstance(rules[name], int) or isinstance(rules[name], bool) or rules[name] < 1):
+            raise ValueError(f"{name} must be a positive integer.")
+
+    for fixed in rules.get("fixed_lessons", []):
+        required = ("class", "subject", "teacher", "day", "period")
+        if not isinstance(fixed, dict) or not all(k in fixed for k in required):
+            raise ValueError(f"Each fixed_lessons entry requires {', '.join(required)}.")
+        if fixed["class"] not in class_ids or fixed["teacher"] not in teacher_ids:
+            raise ValueError(f"Unknown class or teacher in fixed lesson: {fixed}")
+        matching = [s for c in classes if c["id"] == fixed["class"] for s in c["subjects"]
+                    if str(s["subject"]).casefold() == str(fixed["subject"]).casefold()
+                    and s["teacher"] == fixed["teacher"]]
+        if not matching:
+            raise ValueError(f"Fixed lesson does not match a class subject assignment: {fixed}")
+        if "session" in fixed and not 1 <= int(fixed["session"]) <= int(matching[0]["sessions_per_week"]):
+            raise ValueError(f"Fixed lesson session is out of range: {fixed}")
+        day_index(days, fixed["day"])
+        period_index(periods, fixed["period"])
 
     print("Data validation successful.")
 
@@ -533,11 +615,9 @@ def make_model(data, lessons, include_objective=True):
                     y = model.new_bool_var(f"occ_{class_id}_{subject}_d{d}_p{p}")
                     model.add_max_equality(y, [x[i, d, p] for i in inds])
                     occupied.append(y)
-                # No 1-0-1 pattern: subject sessions on a day must be contiguous within teaching blocks.
+                # Adjacency is a preference, not a hidden hard constraint. This keeps
+                # optimization from rejecting a timetable that passed feasibility.
                 for group in period_groups:
-                    for index in range(1, len(group) - 1):
-                        p = group[index]
-                        model.add(occupied[group[index - 1]] + occupied[group[index + 1]] - 1 <= occupied[p])
                     # Small bonus for adjacent occupied slots within each contiguous block.
                     for index in range(len(group) - 1):
                         p = group[index]
@@ -665,7 +745,7 @@ def generate_timetable(data):
                 continue
             break
 
-    return {
+    result = {
         "school": school["name"],
         "days": days,
         "periods": periods,
@@ -677,22 +757,116 @@ def generate_timetable(data):
             "total_lessons": len(lessons),
         },
     }
+    verify_timetable(data, result)
+    return result
 
 
-def save_json(result):
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+def verify_timetable(data, result):
+    """Independently check every hard constraint in a generated timetable."""
+    rows = result.get("timetable", [])
+    expected = build_lessons(data)
+    if len(rows) != len(expected):
+        raise RuntimeError(f"Verification failed: expected {len(expected)} lessons, found {len(rows)}.")
+
+    expected_ids = {lesson["id"] for lesson in expected}
+    actual_ids = [row.get("lesson_id") for row in rows]
+    if set(actual_ids) != expected_ids or len(set(actual_ids)) != len(actual_ids):
+        raise RuntimeError("Verification failed: lessons are missing or duplicated.")
+
+    days = data["school"]["days"]
+    periods = data["school"]["periods"]
+    groups = build_contiguous_period_groups(periods, data["school"].get("breaks", []))
+    rules = data.get("rules", {})
+    by_slot_class = defaultdict(list)
+    by_slot_teacher = defaultdict(list)
+    by_subject_day = defaultdict(int)
+    row_by_id = {}
+    for row in rows:
+        d = day_index(days, row["day"])
+        p = period_index(periods, row["period"])
+        row_by_id[row["lesson_id"]] = row
+        by_slot_class[row["class_id"], d, p].append(row)
+        by_slot_teacher[row["teacher"], d, p].append(row)
+        by_subject_day[row["class_id"], row["subject"], d] += 1
+    if any(len(v) > 1 for v in by_slot_class.values()):
+        raise RuntimeError("Verification failed: a class is double-booked.")
+    if any(len(v) > 1 for v in by_slot_teacher.values()):
+        raise RuntimeError("Verification failed: a teacher is double-booked.")
+
+    lesson_by_id = {lesson["id"]: lesson for lesson in expected}
+    for lesson_id, row in row_by_id.items():
+        lesson = lesson_by_id[lesson_id]
+        if any(row[k] != lesson[k] for k in ("class_id", "subject", "teacher")):
+            raise RuntimeError(f"Verification failed: lesson metadata changed for {lesson_id}.")
+    for (class_id, subject, _), count in by_subject_day.items():
+        lesson = next(x for x in expected if x["class_id"] == class_id and x["subject"] == subject)
+        if count > lesson["max_sessions_per_day"]:
+            raise RuntimeError(f"Verification failed: daily subject limit exceeded for {class_id}/{subject}.")
+
+    for rule_name, owner_key, slot_map in (
+        ("teacher_unavailable", "teacher", by_slot_teacher),
+        ("class_unavailable", "class", by_slot_class),
+    ):
+        for item in rules.get(rule_name, []):
+            key = (item[owner_key], day_index(days, item["day"]), period_index(periods, item["period"]))
+            if slot_map.get(key):
+                raise RuntimeError(f"Verification failed: {rule_name} violated by {item}.")
+
+    for fixed in rules.get("fixed_lessons", []):
+        d, p = day_index(days, fixed["day"]), period_index(periods, fixed["period"])
+        candidates = by_slot_class.get((fixed["class"], d, p), [])
+        if not any(r["subject"] == fixed["subject"] and r["teacher"] == fixed["teacher"] and
+                   ("session" not in fixed or r["session"] == int(fixed["session"])) for r in candidates):
+            raise RuntimeError(f"Verification failed: fixed lesson not honored: {fixed}.")
+
+    for restriction in rules.get("free_period_restrictions", []):
+        allowed_days = {day_index(days, day) for day in restriction.get("allowed_days", [])}
+        allowed_positions = set()
+        for position in restriction.get("allowed_period_positions", []):
+            normalized = str(position).strip().lower()
+            if normalized in {"first", "last"}:
+                allowed_positions.update(period_positions(groups, normalized))
+            else:
+                allowed_positions.add(period_index(periods, position))
+        for d in range(len(days)):
+            for p in range(len(periods)):
+                if d not in allowed_days and p not in allowed_positions and not by_slot_class.get((restriction["class"], d, p)):
+                    raise RuntimeError(f"Verification failed: forbidden free period for {restriction['class']}.")
+
+    for owner_key, limit_name, slot_map in (
+        ("class_id", "max_class_consecutive_periods", by_slot_class),
+        ("teacher", "max_teacher_consecutive_periods", by_slot_teacher),
+    ):
+        limit = rules.get(limit_name)
+        if not limit:
+            continue
+        owners = {row[owner_key] for row in rows}
+        for owner in owners:
+            for d in range(len(days)):
+                for group in groups:
+                    run = 0
+                    for p in group:
+                        run = run + 1 if slot_map.get((owner, d, p)) else 0
+                        if run > limit:
+                            raise RuntimeError(f"Verification failed: {limit_name} exceeded by {owner}.")
+
+    print("OK: Independent timetable verification passed.")
+
+
+def save_json(result, path=OUTPUT_JSON):
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
-    print(f"JSON saved to {OUTPUT_JSON}")
+    print(f"JSON saved to {path}")
 
 
-def save_csv(result):
+def save_csv(result, path=OUTPUT_CSV):
     fields = ["class", "day", "period", "period_name", "start", "end", "subject", "teacher", "session"]
-    with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
+    with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         for row in result["timetable"]:
             writer.writerow({k: row.get(k) for k in fields})
-    print(f"CSV saved to {OUTPUT_CSV}")
+    print(f"CSV saved to {path}")
 
 
 def display_class_timetables(result):
@@ -718,19 +892,28 @@ def display_class_timetables(result):
             print(" | ".join(f"{c:<22}" for c in cells))
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Generate and verify a school timetable from JSON data.")
+    parser.add_argument("input", nargs="?", default=DATA_FILE, help="input JSON file")
+    parser.add_argument("--json-output", default=OUTPUT_JSON, help="output JSON file")
+    parser.add_argument("--csv-output", default=OUTPUT_CSV, help="output CSV file")
+    parser.add_argument("--no-display", action="store_true", help="do not print class tables")
+    args = parser.parse_args(argv)
     try:
-        data = load_data()
+        data = load_data(args.input)
         validate_data(data)
         result = generate_timetable(data)
         if result is None:
-            return
-        save_json(result)
-        save_csv(result)
-        display_class_timetables(result)
+            return 2
+        save_json(result, args.json_output)
+        save_csv(result, args.csv_output)
+        if not args.no_display:
+            display_class_timetables(result)
+        return 0
     except Exception as e:
         print("\nERROR:", e)
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
